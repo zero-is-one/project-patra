@@ -8,6 +8,7 @@ import {
 } from "react-native-gesture-handler";
 import {
   Easing,
+  useDerivedValue,
   useSharedValue,
   withRepeat,
   withTiming,
@@ -17,12 +18,22 @@ import lettersJson from "../../assets/letters.json";
 
 const { width, height } = Dimensions.get("window");
 
+const pathA = Skia.Path.MakeFromSVGString("M 0 0 L 100 0 L 100 100 Z");
+const pathB = Skia.Path.MakeFromSVGString("M 50 50 L 150 50 L 150 150 Z");
+
 export default function TestPage() {
   const letterPaths = lettersJson.tha;
   // Use shared value for Skia Path, following reference example
   const currentPath = useSharedValue(Skia.Path.Make());
   const [currentIndex, setCurrentIndex] = useState(0);
   const progress = useSharedValue(-1);
+
+  const drawMorphProgess = useSharedValue(0);
+
+  // Use Reanimated's useDerivedValue to handle the interpolation
+  const interpolatedPath = useDerivedValue(() => {
+    return pathA!.interpolate(pathB!, progress.value);
+  });
 
   // Animate the current path when currentIndex changes
   useEffect(() => {
@@ -46,11 +57,15 @@ export default function TestPage() {
   const gesture = Gesture.Pan()
     .onBegin((event) => {
       currentPath.value.moveTo(event.x, event.y);
-      currentPath.modify();
+      //currentPath.modify();
     })
     .onChange((event) => {
       currentPath.value.lineTo(event.x, event.y);
-      currentPath.modify();
+      //currentPath.modify();
+    })
+    .onEnd(() => {
+      // currentPath.value.reset();
+      // currentPath.modify();
     });
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -78,13 +93,7 @@ export default function TestPage() {
                   style="stroke"
                   strokeWidth={4}
                   color="#4b4b74"
-                  end={
-                    index === currentIndex
-                      ? progress
-                      : index < currentIndex
-                        ? 1
-                        : 0
-                  }
+                  end={index === currentIndex ? progress : 0}
                   strokeCap="round"
                 />
               ))}
@@ -98,6 +107,8 @@ export default function TestPage() {
               strokeCap="round"
               strokeJoin="round"
             />
+
+            <Path path={interpolatedPath} color="blue" />
           </Canvas>
         </GestureDetector>
       </View>
