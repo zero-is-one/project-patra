@@ -1,17 +1,17 @@
 import { Path, SkPath } from "@shopify/react-native-skia";
 import { SharedValue } from "react-native-reanimated";
 
-type GuidePathLayerProps = {
-  currentIndex: number;
-  progress: SharedValue<number>;
+type LetterGuideProps = {
+  activePathIndex: number;
   scaledLetterPaths: SkPath[];
+  progress: SharedValue<number>;
 };
 
-export function GuidePathLayer({
-  currentIndex,
-  progress,
+export function LetterGuide({
+  activePathIndex,
   scaledLetterPaths,
-}: GuidePathLayerProps) {
+  progress,
+}: LetterGuideProps) {
   return (
     <>
       {scaledLetterPaths.map((path, index) => (
@@ -31,7 +31,7 @@ export function GuidePathLayer({
           style="stroke"
           strokeWidth={10}
           color="#7d7d7d"
-          end={index === currentIndex ? progress : 0}
+          end={index === activePathIndex ? progress : 0}
           strokeCap="round"
         />
       ))}

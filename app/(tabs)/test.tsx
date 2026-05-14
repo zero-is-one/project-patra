@@ -1,10 +1,18 @@
+import lettersJson from "@/assets/letters.json";
+import { LetterGuide } from "@/components/drawing/LetterGuide";
 import {
   compareStrokes,
   EMPTY_STROKE_SCORES,
   resamplePath,
 } from "@/utils/stroke";
 import { Canvas, Path, rect, Skia, SkPath } from "@shopify/react-native-skia";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Button, Dimensions, StyleSheet, View } from "react-native";
 import {
   Gesture,
@@ -12,13 +20,16 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import {
+  cancelAnimation,
   Easing,
+  useDerivedValue,
   useSharedValue,
   withRepeat,
+  withSequence,
   withTiming,
 } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
-import lettersJson from "../../assets/letters.json";
 const letterPaths = lettersJson.tha2;
 
 const { width: windowWidth } = Dimensions.get("window");
@@ -66,11 +77,40 @@ export default function TestPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [drawnPaths, setDrawnPaths] = useState<DrawnPath[]>([]);
   const [shakingPathId, setShakingPathId] = useState<number | null>(null);
-  const [shakeOffset, setShakeOffset] = useState({ x: 0, y: 0 });
   const progress = useSharedValue(-1);
+  const shakeProgress = useSharedValue(0);
   const nextPathIdRef = useRef(1);
-  const shakeTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const morphAnimationRef = useRef<number | null>(null);
+  const shakeCompletionRef = useRef<(() => void) | undefined>(undefined);
+
+  const shakeTransform = useDerivedValue(() => {
+    const shakeFrames = [
+      { x: -2, y: 1 },
+      { x: 2, y: -1 },
+      { x: -1.5, y: 0.75 },
+      { x: 1.5, y: -0.75 },
+      { x: 0, y: 0 },
+    ];
+
+    const phase = shakeProgress.value;
+    const frameIndex = Math.min(Math.floor(phase), shakeFrames.length - 1);
+    const nextFrameIndex = Math.min(frameIndex + 1, shakeFrames.length - 1);
+    const localProgress = phase - frameIndex;
+
+    const currentFrame = shakeFrames[frameIndex];
+    const nextFrame = shakeFrames[nextFrameIndex];
+
+    return [
+      {
+        translateX:
+          currentFrame.x + (nextFrame.x - currentFrame.x) * localProgress,
+      },
+      {
+        translateY:
+          currentFrame.y + (nextFrame.y - currentFrame.y) * localProgress,
+      },
+    ];
+  });
 
   const stopMorphAnimation = () => {
     if (morphAnimationRef.current !== null) {
@@ -79,33 +119,30 @@ export default function TestPage() {
     }
   };
 
+  const finishShake = useCallback((completedPathId: number) => {
+    setShakingPathId((current) =>
+      current === completedPathId ? null : current,
+    );
+    shakeCompletionRef.current?.();
+    shakeCompletionRef.current = undefined;
+  }, []);
+
   const playShake = (pathId: number, onComplete?: () => void) => {
-    shakeTimersRef.current.forEach(clearTimeout);
-    shakeTimersRef.current = [];
+    cancelAnimation(shakeProgress);
+    setShakingPathId(pathId);
+    shakeCompletionRef.current = onComplete;
 
-    const frames = [
-      { at: 0, x: -2, y: 1 },
-      { at: 45, x: 2, y: -1 },
-      { at: 90, x: -1.5, y: 0.75 },
-      { at: 135, x: 1.5, y: -0.75 },
-      { at: 180, x: 0, y: 0 },
-    ];
-
-    for (const frame of frames) {
-      const timer = setTimeout(() => {
-        setShakingPathId(pathId);
-        setShakeOffset({ x: frame.x, y: frame.y });
-      }, frame.at);
-      shakeTimersRef.current.push(timer);
-    }
-
-    const clearTimer = setTimeout(() => {
-      setShakeOffset({ x: 0, y: 0 });
-      setShakingPathId((current) => (current === pathId ? null : current));
-      onComplete?.();
-    }, 230);
-
-    shakeTimersRef.current.push(clearTimer);
+    shakeProgress.value = 0;
+    shakeProgress.value = withSequence(
+      withTiming(1, { duration: 45, easing: Easing.linear }),
+      withTiming(2, { duration: 45, easing: Easing.linear }),
+      withTiming(3, { duration: 45, easing: Easing.linear }),
+      withTiming(4, { duration: 95, easing: Easing.linear }, (finished) => {
+        if (finished) {
+          scheduleOnRN(finishShake, pathId);
+        }
+      }),
+    );
   };
 
   const playMorphToGuide = (
@@ -164,26 +201,26 @@ export default function TestPage() {
   useEffect(() => {
     return () => {
       stopMorphAnimation();
-      shakeTimersRef.current.forEach(clearTimeout);
-      shakeTimersRef.current = [];
+      cancelAnimation(shakeProgress);
+      shakeCompletionRef.current = undefined;
     };
-  }, []);
+  }, [shakeProgress]);
 
   const handleReset = () => {
     stopMorphAnimation();
+    cancelAnimation(shakeProgress);
     setCurrentIndex(0);
     setDrawnPaths([]);
+    setShakingPathId(null);
   };
 
   const gesture = Gesture.Pan()
     .runOnJS(true)
     .onBegin((event) => {
       pencilPath.value.moveTo(event.x, event.y);
-      //pencilPath.modify();
     })
     .onChange((event) => {
       pencilPath.value.lineTo(event.x, event.y);
-      //pencilPath.modify();
     })
     .onEnd(() => {
       const equalPath = resamplePath(pencilPath.value, numberOfPoints);
@@ -246,27 +283,11 @@ export default function TestPage() {
               backgroundColor: "#fff",
             }}
           >
-            {scaledLetterPaths.map((path, index) => (
-              <Path
-                key={`guide-base-${index}`}
-                path={path}
-                style="stroke"
-                strokeWidth={10}
-                color="#a9a9a9"
-                strokeCap="round"
-              />
-            ))}
-            {scaledLetterPaths.map((path, index) => (
-              <Path
-                key={`guide-active-${index}`}
-                path={path}
-                style="stroke"
-                strokeWidth={10}
-                color="#7d7d7d"
-                end={index === currentIndex ? progress : 0}
-                strokeCap="round"
-              />
-            ))}
+            <LetterGuide
+              activePathIndex={currentIndex}
+              progress={progress}
+              scaledLetterPaths={scaledLetterPaths}
+            />
 
             <Path
               path={pencilPath}
@@ -287,17 +308,10 @@ export default function TestPage() {
                 strokeCap="round"
                 strokeJoin="round"
                 transform={
-                  item.id === shakingPathId
-                    ? [
-                        { translateX: shakeOffset.x },
-                        { translateY: shakeOffset.y },
-                      ]
-                    : undefined
+                  item.id === shakingPathId ? shakeTransform : undefined
                 }
               />
             ))}
-
-            {/* <Path path={morphPath} color="red" style="stroke" strokeWidth={6} /> */}
           </Canvas>
         </GestureDetector>
       </View>
