@@ -78,9 +78,11 @@ export default function TestPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [drawnPaths, setDrawnPaths] = useState<DrawnPath[]>([]);
   const [shakingPathId, setShakingPathId] = useState<number | null>(null);
+  const [morphingPathId, setMorphingPathId] = useState<number | null>(null);
   const isComplete = currentIndex >= scaledLetterPaths.length;
   const progress = useSharedValue(-1);
   const shakeProgress = useSharedValue(0);
+  const morphPath = useSharedValue(Skia.Path.Make());
   const nextPathIdRef = useRef(1);
   const morphAnimationRef = useRef<number | null>(null);
   const shakeCompletionRef = useRef<(() => void) | undefined>(undefined);
@@ -158,6 +160,8 @@ export default function TestPage() {
       onComplete?: () => void,
     ) => {
       stopMorphAnimation();
+      setMorphingPathId(pathId);
+      morphPath.value = fromPath.copy();
 
       const targetPath = resamplePath(guidePath, NUMBER_OF_POINTS);
       const durationMs = 400;
@@ -174,14 +178,7 @@ export default function TestPage() {
         const interpolated = fromPath.interpolate(targetPath, 1 - eased);
         const framePath =
           interpolated ?? (progressRatio >= 1 ? targetPath : fromPath);
-
-        setDrawnPaths((prev) =>
-          prev.map((item) =>
-            item.id === pathId
-              ? { ...item, color: "#1ea54c", path: framePath }
-              : item,
-          ),
-        );
+        morphPath.value = framePath;
 
         if (progressRatio < 1) {
           morphAnimationRef.current = requestAnimationFrame(step);
@@ -189,12 +186,21 @@ export default function TestPage() {
         }
 
         morphAnimationRef.current = null;
+        setMorphingPathId((current) => (current === pathId ? null : current));
+        morphPath.value = Skia.Path.Make();
+        setDrawnPaths((prev) =>
+          prev.map((item) =>
+            item.id === pathId
+              ? { ...item, color: "#1ea54c", path: targetPath }
+              : item,
+          ),
+        );
         onComplete?.();
       };
 
       morphAnimationRef.current = requestAnimationFrame(step);
     },
-    [stopMorphAnimation],
+    [morphPath, stopMorphAnimation],
   );
 
   // Animate the current path when currentIndex changes
@@ -217,9 +223,11 @@ export default function TestPage() {
   const handleReset = () => {
     stopMorphAnimation();
     cancelAnimation(shakeProgress);
+    morphPath.value = Skia.Path.Make();
     nextPathIdRef.current = 1;
     setCurrentIndex(0);
     setDrawnPaths([]);
+    setMorphingPathId(null);
     setShakingPathId(null);
   };
 
@@ -244,7 +252,7 @@ export default function TestPage() {
       setDrawnPaths((prev) => [
         ...prev,
         {
-          color: isSimilar ? "#1ea54c" : "#d33c3c",
+          color: isSimilar ? "transparent" : "#d33c3c",
           id: pathId,
           path: pencilSampledPath,
         },
@@ -319,6 +327,17 @@ export default function TestPage() {
                 }
               />
             ))}
+
+            {morphingPathId !== null && (
+              <Path
+                path={morphPath}
+                color="#1ea54c"
+                style="stroke"
+                strokeWidth={6}
+                strokeCap="round"
+                strokeJoin="round"
+              />
+            )}
           </Canvas>
         </GestureDetector>
       </View>
