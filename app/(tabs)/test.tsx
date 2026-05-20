@@ -1,6 +1,12 @@
 import lettersJson from "@/assets/letters.json";
 import { LetterGuide } from "@/components/drawing/LetterGuide";
 import {
+  CLOSENESS_THRESHOLD,
+  NUMBER_OF_POINTS,
+  SHAPE_THRESHOLD,
+  SIZE_THRESHOLD,
+} from "@/constants/drawing";
+import {
   compareStrokes,
   EMPTY_STROKE_SCORES,
   resamplePath,
@@ -13,7 +19,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, Dimensions, StyleSheet, View } from "react-native";
+import { Button, StyleSheet, useWindowDimensions, View } from "react-native";
 import {
   Gesture,
   GestureDetector,
@@ -32,10 +38,8 @@ import { scheduleOnRN } from "react-native-worklets";
 
 const letterPaths = lettersJson.tha;
 
-const { width: windowWidth } = Dimensions.get("window");
 const FILE_LETTER_WIDTH = 35;
 const FILE_LETTER_HEIGHT = 30;
-const numberOfPoints = 50;
 
 type DrawnPath = {
   id: number;
@@ -43,11 +47,8 @@ type DrawnPath = {
   color: string;
 };
 
-const SHAPE_THRESHOLD = 0.6;
-const SIZE_THRESHOLD = 0.6;
-const CLOSENESS_THRESHOLD = 0.6;
-
 export default function TestPage() {
+  const { width: windowWidth } = useWindowDimensions();
   const dst = rect(
     0,
     0,
@@ -77,6 +78,7 @@ export default function TestPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [drawnPaths, setDrawnPaths] = useState<DrawnPath[]>([]);
   const [shakingPathId, setShakingPathId] = useState<number | null>(null);
+  const isComplete = currentIndex >= scaledLetterPaths.length;
   const progress = useSharedValue(-1);
   const shakeProgress = useSharedValue(0);
   const nextPathIdRef = useRef(1);
@@ -112,12 +114,12 @@ export default function TestPage() {
     ];
   });
 
-  const stopMorphAnimation = () => {
+  const stopMorphAnimation = useCallback(() => {
     if (morphAnimationRef.current !== null) {
       cancelAnimationFrame(morphAnimationRef.current);
       morphAnimationRef.current = null;
     }
-  };
+  }, []);
 
   const finishShake = useCallback((completedPathId: number) => {
     setShakingPathId((current) =>
@@ -127,67 +129,73 @@ export default function TestPage() {
     shakeCompletionRef.current = undefined;
   }, []);
 
-  const playShake = (pathId: number, onComplete?: () => void) => {
-    cancelAnimation(shakeProgress);
-    setShakingPathId(pathId);
-    shakeCompletionRef.current = onComplete;
+  const playShake = useCallback(
+    (pathId: number, onComplete?: () => void) => {
+      cancelAnimation(shakeProgress);
+      setShakingPathId(pathId);
+      shakeCompletionRef.current = onComplete;
 
-    shakeProgress.value = 0;
-    shakeProgress.value = withSequence(
-      withTiming(1, { duration: 45, easing: Easing.linear }),
-      withTiming(2, { duration: 45, easing: Easing.linear }),
-      withTiming(3, { duration: 45, easing: Easing.linear }),
-      withTiming(4, { duration: 95, easing: Easing.linear }, (finished) => {
-        if (finished) {
-          scheduleOnRN(finishShake, pathId);
-        }
-      }),
-    );
-  };
-
-  const playMorphToGuide = (
-    pathId: number,
-    fromPath: SkPath,
-    guidePath: SkPath,
-    onComplete?: () => void,
-  ) => {
-    stopMorphAnimation();
-
-    const targetPath = resamplePath(guidePath, numberOfPoints);
-    const durationMs = 400;
-    let startTime: number | null = null;
-
-    const step = (timestamp: number) => {
-      if (startTime === null) {
-        startTime = timestamp;
-      }
-
-      const progressRatio = Math.min((timestamp - startTime) / durationMs, 1);
-      const eased = 1 - Math.pow(1 - progressRatio, 3);
-
-      const interpolated = fromPath.interpolate(targetPath, 1 - eased);
-      const framePath =
-        interpolated ?? (progressRatio >= 1 ? targetPath : fromPath);
-
-      setDrawnPaths((prev) =>
-        prev.map((item) =>
-          item.id === pathId
-            ? { ...item, color: "#1ea54c", path: framePath }
-            : item,
-        ),
+      shakeProgress.value = 0;
+      shakeProgress.value = withSequence(
+        withTiming(1, { duration: 45, easing: Easing.linear }),
+        withTiming(2, { duration: 45, easing: Easing.linear }),
+        withTiming(3, { duration: 45, easing: Easing.linear }),
+        withTiming(4, { duration: 95, easing: Easing.linear }, (finished) => {
+          if (finished) {
+            scheduleOnRN(finishShake, pathId);
+          }
+        }),
       );
+    },
+    [finishShake, shakeProgress],
+  );
 
-      if (progressRatio < 1) {
-        morphAnimationRef.current = requestAnimationFrame(step);
-        return;
-      }
+  const playMorphToGuide = useCallback(
+    (
+      pathId: number,
+      fromPath: SkPath,
+      guidePath: SkPath,
+      onComplete?: () => void,
+    ) => {
+      stopMorphAnimation();
 
-      morphAnimationRef.current = null;
-      onComplete?.();
-    };
+      const targetPath = resamplePath(guidePath, NUMBER_OF_POINTS);
+      const durationMs = 400;
+      let startTime: number | null = null;
 
-    morphAnimationRef.current = requestAnimationFrame(step);
-  };
+      const step = (timestamp: number) => {
+        if (startTime === null) {
+          startTime = timestamp;
+        }
+
+        const progressRatio = Math.min((timestamp - startTime) / durationMs, 1);
+        const eased = 1 - Math.pow(1 - progressRatio, 3);
+
+        const interpolated = fromPath.interpolate(targetPath, 1 - eased);
+        const framePath =
+          interpolated ?? (progressRatio >= 1 ? targetPath : fromPath);
+
+        setDrawnPaths((prev) =>
+          prev.map((item) =>
+            item.id === pathId
+              ? { ...item, color: "#1ea54c", path: framePath }
+              : item,
+          ),
+        );
+
+        if (progressRatio < 1) {
+          morphAnimationRef.current = requestAnimationFrame(step);
+          return;
+        }
+
+        morphAnimationRef.current = null;
+        onComplete?.();
+      };
+
+      morphAnimationRef.current = requestAnimationFrame(step);
+    },
+    [stopMorphAnimation],
+  );
 
   // Animate the current path when currentIndex changes
   useEffect(() => {
@@ -204,29 +212,27 @@ export default function TestPage() {
       cancelAnimation(shakeProgress);
       shakeCompletionRef.current = undefined;
     };
-  }, [shakeProgress]);
+  }, [shakeProgress, stopMorphAnimation]);
 
   const handleReset = () => {
     stopMorphAnimation();
     cancelAnimation(shakeProgress);
+    nextPathIdRef.current = 1;
     setCurrentIndex(0);
     setDrawnPaths([]);
     setShakingPathId(null);
   };
 
-  const gesture = Gesture.Pan()
-    .runOnJS(true)
-    .onBegin((event) => {
-      pencilPath.value.moveTo(event.x, event.y);
-    })
-    .onChange((event) => {
-      pencilPath.value.lineTo(event.x, event.y);
-    })
-    .onEnd(() => {
-      const pencilSampledPath = resamplePath(pencilPath.value, numberOfPoints);
+  const commitStroke = useCallback(
+    (completedPath: SkPath) => {
+      if (currentIndex >= scaledLetterPaths.length) {
+        return;
+      }
+
+      const pencilSampledPath = resamplePath(completedPath, NUMBER_OF_POINTS);
       const guidePath = scaledLetterPaths[currentIndex];
       const scores = guidePath
-        ? compareStrokes(pencilSampledPath, guidePath, numberOfPoints)
+        ? compareStrokes(pencilSampledPath, guidePath, NUMBER_OF_POINTS)
         : EMPTY_STROKE_SCORES;
       const passesShape = scores.shapeScore >= SHAPE_THRESHOLD;
       const passesSize = scores.sizeScore >= SIZE_THRESHOLD;
@@ -246,20 +252,30 @@ export default function TestPage() {
 
       if (isSimilar && guidePath) {
         playMorphToGuide(pathId, pencilSampledPath, guidePath);
-        setCurrentIndex(currentIndex + 1);
+        setCurrentIndex((prev) => Math.min(prev + 1, scaledLetterPaths.length));
       }
 
       if (!isSimilar) {
         playShake(pathId, () => {
-          setDrawnPaths((prev) =>
-            prev.map((item) =>
-              item.id === pathId ? { ...item, color: "transparent" } : item,
-            ),
-          );
+          setDrawnPaths((prev) => prev.filter((item) => item.id !== pathId));
         });
       }
+    },
+    [currentIndex, playMorphToGuide, playShake, scaledLetterPaths],
+  );
 
+  const gesture = Gesture.Pan()
+    .enabled(!isComplete)
+    .onBegin((event) => {
+      pencilPath.value.moveTo(event.x, event.y);
+    })
+    .onChange((event) => {
+      pencilPath.value.lineTo(event.x, event.y);
+    })
+    .onEnd(() => {
+      const completedPath = pencilPath.value.copy();
       pencilPath.value = Skia.Path.Make();
+      scheduleOnRN(commitStroke, completedPath);
     });
 
   return (
