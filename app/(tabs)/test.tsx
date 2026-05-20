@@ -30,7 +30,7 @@ import {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-const letterPaths = lettersJson.tha2;
+const letterPaths = lettersJson.tha;
 
 const { width: windowWidth } = Dimensions.get("window");
 const FILE_LETTER_WIDTH = 35;
@@ -223,24 +223,15 @@ export default function TestPage() {
       pencilPath.value.lineTo(event.x, event.y);
     })
     .onEnd(() => {
-      const equalPath = resamplePath(pencilPath.value, numberOfPoints);
+      const pencilSampledPath = resamplePath(pencilPath.value, numberOfPoints);
       const guidePath = scaledLetterPaths[currentIndex];
       const scores = guidePath
-        ? compareStrokes(equalPath, guidePath, numberOfPoints)
+        ? compareStrokes(pencilSampledPath, guidePath, numberOfPoints)
         : EMPTY_STROKE_SCORES;
       const passesShape = scores.shapeScore >= SHAPE_THRESHOLD;
       const passesSize = scores.sizeScore >= SIZE_THRESHOLD;
       const passesCloseness = scores.closenessScore >= CLOSENESS_THRESHOLD;
       const isSimilar = passesShape && passesSize && passesCloseness;
-      console.log(
-        "shapeScore:",
-        scores.shapeScore.toFixed(2),
-        "sizeScore:",
-        scores.sizeScore.toFixed(2),
-        "closenessScore:",
-        scores.closenessScore.toFixed(2),
-        isSimilar ? "✓" : "✗",
-      );
       const pathId = nextPathIdRef.current;
       nextPathIdRef.current += 1;
 
@@ -249,12 +240,12 @@ export default function TestPage() {
         {
           color: isSimilar ? "#1ea54c" : "#d33c3c",
           id: pathId,
-          path: equalPath,
+          path: pencilSampledPath,
         },
       ]);
 
       if (isSimilar && guidePath) {
-        playMorphToGuide(pathId, equalPath, guidePath);
+        playMorphToGuide(pathId, pencilSampledPath, guidePath);
         setCurrentIndex(currentIndex + 1);
       }
 

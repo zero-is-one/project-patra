@@ -1,0 +1,1 @@
+Children's book illustration, minimal digital gouache style, flat shapes with subtle dry-brush texture and soft grainy edges. Mid-century modern aesthetic, muted retro color palette on a solid cream background. Naïve geometric character design cute and minimalist, no harsh gradients or complex shading. Inspired by the style of Mary Blair and Jon Klassen.
