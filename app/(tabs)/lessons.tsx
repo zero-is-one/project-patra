@@ -3,7 +3,8 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 type Lesson = {
   name: string;
@@ -14,6 +15,7 @@ type Lesson = {
 };
 
 export default function LessonsScreen() {
+  const router = useRouter();
   const colorScheme = useColorScheme() ?? "light";
   const isDark = colorScheme === "dark";
   const lessons = (lessonsData as { lessons: Lesson[] }).lessons;
@@ -22,16 +24,26 @@ export default function LessonsScreen() {
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         {lessons.map((lesson) => (
-          <ThemedView
+          <Pressable
             key={lesson.name}
-            style={[
+            onPress={() =>
+              router.push({
+                pathname: "/lesson-draw",
+                params: { lesson: lesson.name },
+              })
+            }
+            style={({ pressed }) => [
               styles.card,
               {
                 borderColor: Colors[colorScheme].icon,
                 backgroundColor: isDark ? "#1f2327" : "#f8fafc",
+                opacity: pressed ? 0.7 : 1,
               },
             ]}
           >
+            <ThemedText type="subtitle" style={styles.lessonName}>
+              {lesson.name}
+            </ThemedText>
             <ThemedText type="subtitle" style={styles.lessonName}>
               {lesson.name}
             </ThemedText>
@@ -54,7 +66,7 @@ export default function LessonsScreen() {
                 </ThemedView>
               ))}
             </View>
-          </ThemedView>
+          </Pressable>
         ))}
       </ScrollView>
     </ThemedView>

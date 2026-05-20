@@ -36,10 +36,25 @@ import {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-const letterPaths = lettersJson.tha;
+type DrawingPracticeCanvasProps = {
+  svgPaths?: string[];
+  letterWidth?: number;
+  letterHeight?: number;
+  char?: string;
+  onNext?: () => void;
+  isLast?: boolean;
+};
 
-const FILE_LETTER_WIDTH = 35;
-const FILE_LETTER_HEIGHT = 30;
+type LetterPathBundle = {
+  paths: string[];
+  width: number;
+  height: number;
+};
+
+type LetterPathMap = Record<string, LetterPathBundle>;
+
+const DEFAULT_LETTER_WIDTH = 35;
+const DEFAULT_LETTER_HEIGHT = 30;
 
 type DrawnPath = {
   id: number;
@@ -47,31 +62,55 @@ type DrawnPath = {
   color: string;
 };
 
-export default function TestPage() {
+export function DrawingPracticeCanvas({
+  svgPaths,
+  letterWidth,
+  letterHeight,
+  char,
+  onNext,
+  isLast,
+}: DrawingPracticeCanvasProps) {
   const { width: windowWidth } = useWindowDimensions();
+  const fallbackBundle = (lettersJson as LetterPathMap).tha;
+  const sourceWidth =
+    letterWidth ?? fallbackBundle?.width ?? DEFAULT_LETTER_WIDTH;
+  const sourceHeight =
+    letterHeight ?? fallbackBundle?.height ?? DEFAULT_LETTER_HEIGHT;
+
   const dst = rect(
     0,
     0,
     windowWidth,
-    (windowWidth * FILE_LETTER_HEIGHT) / FILE_LETTER_WIDTH,
+    (windowWidth * sourceHeight) / sourceWidth,
   );
-  const scaleX = windowWidth / FILE_LETTER_WIDTH;
-  const scaleY = dst.height / FILE_LETTER_HEIGHT;
+  const scaleX = windowWidth / sourceWidth;
+  const scaleY = dst.height / sourceHeight;
 
+  // If svgPaths is provided, use those paths; else use all from lettersJson.tha.
   const scaledLetterPaths = useMemo(() => {
     const matrix = Skia.Matrix();
     matrix.scale(scaleX, scaleY);
-
-    return letterPaths.map((svgPath) => {
+    if (svgPaths?.length) {
+      return svgPaths.map((pathString) => {
+        const path = Skia.Path.MakeFromSVGString(pathString);
+        if (!path) {
+          return Skia.Path.Make();
+        }
+        path.transform(matrix);
+        return path;
+      });
+    }
+    // fallback: all
+    const fallbackPaths = fallbackBundle?.paths ?? [];
+    return fallbackPaths.map((svgPath) => {
       const path = Skia.Path.MakeFromSVGString(svgPath);
       if (!path) {
         return Skia.Path.Make();
       }
       path.transform(matrix);
-
       return path;
     });
-  }, [scaleX, scaleY]);
+  }, [fallbackBundle?.paths, scaleX, scaleY, svgPaths]);
 
   const pencilPath = useSharedValue(Skia.Path.Make());
 
@@ -289,6 +328,11 @@ export default function TestPage() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <View style={styles.container}>
+        {char && (
+          <View style={{ alignItems: "center", marginBottom: 8 }}>
+            <Button title={char} disabled />
+          </View>
+        )}
         <Button title="Reset" onPress={handleReset} />
         <GestureDetector gesture={gesture}>
           <Canvas
@@ -340,6 +384,12 @@ export default function TestPage() {
             )}
           </Canvas>
         </GestureDetector>
+        {isComplete && onNext && (
+          <Button
+            title={isLast ? "Finish Lesson" : "Next Character"}
+            onPress={onNext}
+          />
+        )}
       </View>
     </GestureHandlerRootView>
   );
@@ -348,3 +398,7 @@ export default function TestPage() {
 const styles = StyleSheet.create({
   container: { backgroundColor: "#aaa", flex: 1, paddingTop: 50 },
 });
+
+export default function PracticeScreen() {
+  return <DrawingPracticeCanvas />;
+}
