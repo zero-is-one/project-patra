@@ -1,11 +1,11 @@
-import coursesData from "@/assets/courses.json";
+import lessonsData from "@/assets/lessons.json";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-type Course = {
+type Lesson = {
   name: string;
   letters: {
     char: string;
@@ -16,14 +16,14 @@ type Course = {
 export default function LessonsScreen() {
   const colorScheme = useColorScheme() ?? "light";
   const isDark = colorScheme === "dark";
-  const courses = (coursesData as { courses: Course[] }).courses;
+  const lessons = (lessonsData as { lessons: Lesson[] }).lessons;
 
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        {courses.map((course) => (
+        {lessons.map((lesson) => (
           <ThemedView
-            key={course.name}
+            key={lesson.name}
             style={[
               styles.card,
               {
@@ -32,14 +32,14 @@ export default function LessonsScreen() {
               },
             ]}
           >
-            <ThemedText type="subtitle" style={styles.courseName}>
-              {course.name}
+            <ThemedText type="subtitle" style={styles.lessonName}>
+              {lesson.name}
             </ThemedText>
 
             <View style={styles.charactersRow}>
-              {course.letters.map((letter) => (
+              {lesson.letters.map((letter) => (
                 <ThemedView
-                  key={`${course.name}-${letter.char}`}
+                  key={`${lesson.name}-${letter.char}`}
                   style={[
                     styles.characterChip,
                     {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 14,
   },
-  courseName: {
+  lessonName: {
     lineHeight: 26,
   },
   charactersRow: {
