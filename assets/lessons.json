@@ -40,7 +40,7 @@
       "name": "Base Vowels",
       "letters": [
         { "char": "उ", "transliteration": "u" },
-        { "char": "ऊ", "transliteration": "ū" },
+        { "char": "ऊ", "transliteration": "ū", "id": "oo" },
         { "char": "अ", "transliteration": "a" },
         { "char": "आ", "transliteration": "ā" }
       ]
@@ -69,7 +69,7 @@
       "letters": [
         { "char": "ड", "transliteration": "ḍa" },
         { "char": "इ", "transliteration": "i" },
-        { "char": "ई", "transliteration": "ī" },
+        { "char": "ई", "transliteration": "ī", "id": "ee" },
         { "char": "ह", "transliteration": "ha" }
       ]
     },
