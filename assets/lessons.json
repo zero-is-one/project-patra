@@ -50,8 +50,8 @@
       "letters": [
         { "char": "ओ", "transliteration": "o" },
         { "char": "औ", "transliteration": "au" },
-        { "char": "अं", "transliteration": "aṃ" },
-        { "char": "अः", "transliteration": "aḥ" }
+        { "char": "अं", "transliteration": "aṃ", "id": "an" },
+        { "char": "अः", "transliteration": "aḥ", "id": "ah" }
       ]
     },
 
