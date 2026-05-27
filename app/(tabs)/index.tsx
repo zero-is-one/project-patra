@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
   },
   content: {
     gap: 12,
+    marginHorizontal: -12,
     paddingBottom: 20,
   },
   card: {
