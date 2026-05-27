@@ -58,7 +58,7 @@ export default function HomeScreen() {
             key={lesson.name}
             onPress={() =>
               router.push({
-                pathname: "/lesson-draw",
+                pathname: "/lesson",
                 params: { lesson: lesson.name },
               })
             }

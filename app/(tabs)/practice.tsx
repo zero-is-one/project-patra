@@ -55,6 +55,9 @@ type DrawingPracticeCanvasProps = {
   char?: string;
   onNext?: () => void;
   isLast?: boolean;
+  hideGuide?: boolean;
+  onAttemptResult?: (isCorrect: boolean) => void;
+  nextButtonLabel?: string;
 };
 
 type LetterPathBundle = {
@@ -91,6 +94,9 @@ export function DrawingPracticeCanvas({
   char,
   onNext,
   isLast,
+  hideGuide,
+  onAttemptResult,
+  nextButtonLabel,
 }: DrawingPracticeCanvasProps) {
   const { width: windowWidth } = useWindowDimensions();
   const fallbackBundle = (lettersJson as LetterPathMap).tha;
@@ -307,6 +313,7 @@ export function DrawingPracticeCanvas({
       const passesSize = scores.sizeScore >= SIZE_THRESHOLD;
       const passesCloseness = scores.closenessScore >= CLOSENESS_THRESHOLD;
       const isSimilar = passesShape && passesSize && passesCloseness;
+      onAttemptResult?.(isSimilar);
       const pathId = nextPathIdRef.current;
       nextPathIdRef.current += 1;
 
@@ -330,7 +337,13 @@ export function DrawingPracticeCanvas({
         });
       }
     },
-    [currentIndex, playMorphToGuide, playShake, scaledLetterPaths],
+    [
+      currentIndex,
+      onAttemptResult,
+      playMorphToGuide,
+      playShake,
+      scaledLetterPaths,
+    ],
   );
 
   const gesture = Gesture.Pan()
@@ -364,11 +377,13 @@ export function DrawingPracticeCanvas({
               backgroundColor: "#fff",
             }}
           >
-            <LetterGuide
-              activePathIndex={currentIndex}
-              progress={progress}
-              scaledLetterPaths={scaledLetterPaths}
-            />
+            {!hideGuide && (
+              <LetterGuide
+                activePathIndex={currentIndex}
+                progress={progress}
+                scaledLetterPaths={scaledLetterPaths}
+              />
+            )}
 
             <Path
               path={pencilPath}
@@ -408,7 +423,9 @@ export function DrawingPracticeCanvas({
         </GestureDetector>
         {isComplete && onNext && (
           <Button
-            title={isLast ? "Finish Lesson" : "Next Character"}
+            title={
+              nextButtonLabel ?? (isLast ? "Finish Lesson" : "Next Character")
+            }
             onPress={onNext}
           />
         )}
