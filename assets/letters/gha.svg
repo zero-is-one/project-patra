@@ -9,7 +9,7 @@
    id="svg1"
    xml:space="preserve"
    inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
-   sodipodi:docname="ma.svg"
+   sodipodi:docname="gha.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
    inkscape:pagecheckerboard="0"
    inkscape:deskcolor="#d1d1d1"
    inkscape:document-units="mm"
-   inkscape:zoom="9.2120695"
-   inkscape:cx="45.212425"
-   inkscape:cy="119.84278"
+   inkscape:zoom="4.6060347"
+   inkscape:cx="112.1355"
+   inkscape:cy="103.99401"
    inkscape:window-width="3840"
    inkscape:window-height="2068"
    inkscape:window-x="-12"
@@ -68,13 +68,13 @@
        
        <path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="m 17.85228,13.302799 c -0.445985,5.925885 1.898595,16.897674 -1.378626,18.08205 -3.277221,1.184376 -7.5338965,-1.590333 -5.453091,-5.079712 2.080806,-3.489379 20.757375,-1.23502 20.757375,-1.23502"
+   d="m 17.023613,12.829096 c -2.213758,2.016721 -2.849244,6.153817 -0.175644,8.084237 1.505767,1.087209 4.28778,0.942247 6.061781,1.118208 -2.319249,0.17094 -6.699303,0.909507 -6.893323,4.620287 -0.19402,3.71078 1.575382,4.939029 5.04723,5.451362 3.471848,0.512333 5.867705,-0.475904 8.672197,-2.02025 0.619577,-0.341182 2.242892,-1.568583 2.242892,-1.568583"
    id="path1"
-   sodipodi:nodetypes="czzc" /><path
+   sodipodi:nodetypes="csczzsc" /><path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="m 32.225387,13.125669 0,23.293038"
+   d="m 32.29144,12.936885 0,23.558533"
    id="path2"
    sodipodi:nodetypes="cc" /><path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="M 8.7025775,12.666128 H 39.089795"
+   d="M 11.758958,12.652558 H 38.973127"
    id="path3" /></svg>

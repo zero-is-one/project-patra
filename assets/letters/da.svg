@@ -9,7 +9,7 @@
    id="svg1"
    xml:space="preserve"
    inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
-   sodipodi:docname="ma.svg"
+   sodipodi:docname="da.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
    inkscape:pagecheckerboard="0"
    inkscape:deskcolor="#d1d1d1"
    inkscape:document-units="mm"
-   inkscape:zoom="9.2120695"
-   inkscape:cx="45.212425"
-   inkscape:cy="119.84278"
+   inkscape:zoom="3.2569584"
+   inkscape:cx="148.14435"
+   inkscape:cy="144.92049"
    inkscape:window-width="3840"
    inkscape:window-height="2068"
    inkscape:window-x="-12"
@@ -52,7 +52,7 @@
      orientation="0,-1"
      id="guide6"
      inkscape:locked="false" /><sodipodi:guide
-     position="31.682167,7.3875815"
+     position="29.870234,7.4037157"
      orientation="0,-1"
      id="guide7"
      inkscape:locked="false" /></sodipodi:namedview><defs
@@ -68,13 +68,9 @@
        
        <path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="m 17.85228,13.302799 c -0.445985,5.925885 1.898595,16.897674 -1.378626,18.08205 -3.277221,1.184376 -7.5338965,-1.590333 -5.453091,-5.079712 2.080806,-3.489379 20.757375,-1.23502 20.757375,-1.23502"
+   d="m 28.709126,12.977503 -0.05267,6.665518 c -19.6489664,-1.168738 -13.695595,19.94245 -0.9012,14.396478 4.873801,-2.112641 4.60034,-8.897782 1.978221,-7.450633 -5.365393,2.961164 0.961452,11.019914 1.879917,12.262529"
    id="path1"
-   sodipodi:nodetypes="czzc" /><path
+   sodipodi:nodetypes="ccssc" /><path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="m 32.225387,13.125669 0,23.293038"
-   id="path2"
-   sodipodi:nodetypes="cc" /><path
-   style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="M 8.7025775,12.666128 H 39.089795"
-   id="path3" /></svg>
+   d="M 14.370913,12.510394 H 38.091919"
+   id="path2" /></svg>

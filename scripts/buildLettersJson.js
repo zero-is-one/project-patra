@@ -3,8 +3,14 @@ const path = require("path");
 
 const lettersDir = path.join(__dirname, "..", "assets", "letters");
 const outputFile = path.join(__dirname, "..", "assets", "letters.json");
+const lessonsFile = path.join(__dirname, "..", "assets", "lessons.json");
 
 const result = {};
+
+function getLessonLetterKey(letter) {
+  const rawKey = letter.code || letter.id || letter.transliteration;
+  return typeof rawKey === "string" ? rawKey.trim().toLowerCase() : "";
+}
 
 function parseViewport(content) {
   const viewBoxMatch = content.match(/\bviewBox\s*=\s*"([^"]+)"/i);
@@ -64,4 +70,29 @@ for (const file of files) {
 fs.writeFileSync(outputFile, JSON.stringify(result, null, 2), "utf8");
 console.log(
   `Written ${Object.keys(result).length} letter(s) to assets/letters.json`,
+);
+
+const lessonsData = JSON.parse(fs.readFileSync(lessonsFile, "utf8"));
+const expectedKeys = new Set();
+
+for (const lesson of lessonsData.lessons || []) {
+  for (const letter of lesson.letters || []) {
+    const key = getLessonLetterKey(letter);
+    if (key) {
+      expectedKeys.add(key);
+    }
+  }
+}
+
+const actualKeys = new Set(Object.keys(result));
+const missing = [...expectedKeys].filter((key) => !actualKeys.has(key)).sort();
+const extra = [...actualKeys].filter((key) => !expectedKeys.has(key)).sort();
+
+console.log("\nLesson comparison against assets/lessons.json");
+console.log(`Expected: ${expectedKeys.size}, Found: ${actualKeys.size}`);
+console.log(
+  `Missing (${missing.length}): ${missing.length ? missing.join(", ") : "none"}`,
+);
+console.log(
+  `Extra (${extra.length}): ${extra.length ? extra.join(", ") : "none"}`,
 );

@@ -1,105 +1,128 @@
 {
   "lessons": [
     {
-      "name": "The Vertical Anchor",
+      "name": "The Core Three-Shape Vowels",
+      "description": "Characters built from the primary '3' shape with structural extensions, horizontal top bars, and right-hand vertical anchors.",
       "letters": [
-        { "char": "व", "transliteration": "va" },
-        { "char": "ब", "transliteration": "ba" },
-        { "char": "त", "transliteration": "ta" },
-        { "char": "न", "transliteration": "na" }
+        { "char": "अ", "transliteration": "a", "code": "a" },
+        { "char": "आ", "transliteration": "aa", "code": "aa" },
+        { "char": "ओ", "transliteration": "o", "code": "o" },
+        { "char": "औ", "transliteration": "au", "code": "au" }
       ]
     },
     {
-      "name": "Open Curves and Right Angles",
+      "name": "Three-Shape Variations",
+      "description": "Letters derived from the '3' baseline shape that omit the full right-hand vertical anchor structure.",
       "letters": [
-        { "char": "प", "transliteration": "pa" },
-        { "char": "फ", "transliteration": "pha" },
-        { "char": "म", "transliteration": "ma" }
+        { "char": "उ", "transliteration": "u", "code": "u" },
+        { "char": "ऊ", "transliteration": "oo", "code": "uu" },
+        { "char": "ऋ", "transliteration": "ri", "code": "ri" }
       ]
     },
     {
-      "name": "The Left-Facing Hook",
+      "name": "The Narrow Loop and Spine",
+      "description": "Forms featuring a sharp diagonal or narrow hook that drops down and anchors to the right or left.",
       "letters": [
-        { "char": "ग", "transliteration": "ga" },
-        { "char": "श", "transliteration": "sha" },
-        { "char": "ज", "transliteration": "ja" },
-        { "char": "च", "transliteration": "cha" }
+        { "char": "र", "transliteration": "ra", "code": "ra" },
+        { "char": "ए", "transliteration": "e", "code": "e" },
+        { "char": "ऐ", "transliteration": "ai", "code": "ai" }
       ]
     },
     {
-      "name": "The Right-Facing Loop",
+      "name": "The Vertical Loop Anchor",
+      "description": "Characters constructed with an enclosed circular loop intersecting a central vertical hanging stroke.",
       "letters": [
-        { "char": "र", "transliteration": "ra" },
-        { "char": "स", "transliteration": "sa" },
-        { "char": "ख", "transliteration": "kha" },
-        { "char": "य", "transliteration": "ya" }
-      ]
-    },
-
-    {
-      "name": "Base Vowels",
-      "letters": [
-        { "char": "उ", "transliteration": "u" },
-        { "char": "ऊ", "transliteration": "ū", "id": "oo" },
-        { "char": "अ", "transliteration": "a" },
-        { "char": "आ", "transliteration": "ā" }
+        { "char": "व", "transliteration": "va", "code": "va" },
+        { "char": "ब", "transliteration": "ba", "code": "ba" },
+        { "char": "क", "transliteration": "ka", "code": "ka" }
       ]
     },
     {
-      "name": "Complex Vowels",
+      "name": "Right-Angle Hanging Frames",
+      "description": "Glyphs containing sharp, square bends or suspended right-angle hooks dropping from the top bar.",
       "letters": [
-        { "char": "ओ", "transliteration": "o" },
-        { "char": "औ", "transliteration": "au" },
-        { "char": "अं", "transliteration": "aṃ", "id": "an" },
-        { "char": "अः", "transliteration": "aḥ", "id": "ah" }
+        { "char": "प", "transliteration": "pa", "code": "pa" },
+        { "char": "ष", "transliteration": "sha", "code": "ssa" },
+        { "char": "फ", "transliteration": "pha", "code": "pha" },
+        { "char": "ण", "transliteration": "ṇa", "code": "nna" }
       ]
     },
-
+    {
+      "name": "Left-Facing Open Hooks",
+      "description": "Letters containing distinct leftward-opening loops or curved vertical stems.",
+      "letters": [
+        { "char": "ग", "transliteration": "ga", "code": "ga" },
+        { "char": "म", "transliteration": "ma", "code": "ma" },
+        { "char": "श", "transliteration": "sha", "code": "sha" },
+        { "char": "स", "transliteration": "sa", "code": "sa" }
+      ]
+    },
     {
       "name": "C-Curves and Enclosures",
+      "description": "Characters featuring small vertical drop-lines that break into broad rightward 'C' curves and internal knots.",
       "letters": [
-        { "char": "ट", "transliteration": "ṭa" },
-        { "char": "ठ", "transliteration": "ṭha" },
-        { "char": "ढ", "transliteration": "ḍha" },
-        { "char": "द", "transliteration": "da" }
+        { "char": "ह", "transliteration": "ha", "code": "ha" },
+        { "char": "ट", "transliteration": "ṭa", "code": "tta" },
+        { "char": "ठ", "transliteration": "ṭha", "code": "ttha" },
+        { "char": "ढ", "transliteration": "ḍha", "code": "ddha" }
       ]
     },
     {
-      "name": "S-Curves",
+      "name": "S-Curves and Loops",
+      "description": "Characters sharing a tight, fluid double-curve or vertical serpentine baseline stroke, building upon the simple S-curve.",
       "letters": [
-        { "char": "ड", "transliteration": "ḍa" },
-        { "char": "इ", "transliteration": "i" },
-        { "char": "ई", "transliteration": "ī", "id": "ee" },
-        { "char": "ह", "transliteration": "ha" }
-      ]
-    },
-
-    {
-      "name": "Split Top-Bars",
-      "letters": [
-        { "char": "ध", "transliteration": "dha" },
-        { "char": "घ", "transliteration": "gha" },
-        { "char": "थ", "transliteration": "tha" },
-        { "char": "भ", "transliteration": "bha" }
+        { "char": "ड", "transliteration": "ḍa", "code": "dda" },
+        { "char": "ङ", "transliteration": "nga", "code": "nga" },
+        { "char": "इ", "transliteration": "i", "code": "i" },
+        { "char": "ई", "transliteration": "ee", "code": "ee" }
       ]
     },
     {
-      "name": "Asymmetrical Forms",
+      "name": "Hanging Horizontal Knots",
+      "description": "Glyphs built from sharp left-to-right linear extensions, tracking hooks, and central intersections.",
       "letters": [
-        { "char": "ल", "transliteration": "la" },
-        { "char": "क", "transliteration": "ka" },
-        { "char": "ए", "transliteration": "e" },
-        { "char": "ऐ", "transliteration": "ai" },
-        { "char": "ऋ", "transliteration": "ṛi" }
+        { "char": "च", "transliteration": "cha", "code": "cha" },
+        { "char": "ज", "transliteration": "ja", "code": "ja" },
+        { "char": "झ", "transliteration": "jha", "code": "jha" },
+        { "char": "ञ", "transliteration": "nya", "code": "nya" }
       ]
     },
     {
-      "name": "The Compound Glyphs",
+      "name": "Split Top-Bar Curvatures",
+      "description": "Characters that break the continuous top horizontal bar via decorative loops or distinct double-crested curves.",
       "letters": [
-        { "char": "क्ष", "transliteration": "ksha" },
-        { "char": "त्र", "transliteration": "tra" },
-        { "char": "ज्ञ", "transliteration": "gya" },
-        { "char": "श्र", "transliteration": "shra" }
+        { "char": "घ", "transliteration": "gha", "code": "gha" },
+        { "char": "ध", "transliteration": "dha", "code": "dha" },
+        { "char": "छ", "transliteration": "chha", "code": "chha" },
+        { "char": "भ", "transliteration": "bha", "code": "bha" }
+      ]
+    },
+    {
+      "name": "Rounded Apex and Anchors",
+      "description": "Letters relying on sweeping internal terminal arcs or split downward legs connected to vertical stems.",
+      "letters": [
+        { "char": "त", "transliteration": "ta", "code": "ta" },
+        { "char": "थ", "transliteration": "tha", "code": "tha" },
+        { "char": "द", "transliteration": "da", "code": "da" },
+        { "char": "न", "transliteration": "na", "code": "na" }
+      ]
+    },
+    {
+      "name": "Asymmetrical Waves",
+      "description": "Complex shapes emphasizing broad horizontal heart-like waves, outer hooks, or non-uniform paths.",
+      "letters": [
+        { "char": "य", "transliteration": "ya", "code": "ya" },
+        { "char": "ख", "transliteration": "kha", "code": "kha" },
+        { "char": "ल", "transliteration": "la", "code": "la" }
+      ]
+    },
+    {
+      "name": "The Compound Ligatures",
+      "description": "Complex conjunct structures formed by the physical blending of distinct consonant shapes.",
+      "letters": [
+        { "char": "क्ष", "transliteration": "ksha", "code": "ksha" },
+        { "char": "त्र", "transliteration": "tra", "code": "tra" },
+        { "char": "ज्ञ", "transliteration": "gya", "code": "gya" }
       ]
     }
   ]

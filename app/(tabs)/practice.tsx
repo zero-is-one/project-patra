@@ -1,11 +1,16 @@
+import lessonsData from "@/assets/lessons.json";
 import lettersJson from "@/assets/letters.json";
 import { LetterGuide } from "@/components/drawing/LetterGuide";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
 import {
   CLOSENESS_THRESHOLD,
   NUMBER_OF_POINTS,
   SHAPE_THRESHOLD,
   SIZE_THRESHOLD,
 } from "@/constants/drawing";
+import { Colors } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 import {
   compareStrokes,
   EMPTY_STROKE_SCORES,
@@ -19,7 +24,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, StyleSheet, useWindowDimensions, View } from "react-native";
+import {
+  Button,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import {
   Gesture,
   GestureDetector,
@@ -34,6 +45,7 @@ import {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import Svg, { Path as SvgPath } from "react-native-svg";
 import { scheduleOnRN } from "react-native-worklets";
 
 type DrawingPracticeCanvasProps = {
@@ -52,6 +64,16 @@ type LetterPathBundle = {
 };
 
 type LetterPathMap = Record<string, LetterPathBundle>;
+
+type LessonCatalog = {
+  lessons: {
+    letters: {
+      char: string;
+      transliteration?: string;
+      code?: string;
+    }[];
+  }[];
+};
 
 const DEFAULT_LETTER_WIDTH = 35;
 const DEFAULT_LETTER_HEIGHT = 30;
@@ -397,8 +419,120 @@ export function DrawingPracticeCanvas({
 
 const styles = StyleSheet.create({
   container: { backgroundColor: "#aaa", flex: 1, paddingTop: 50 },
+  lettersContainer: {
+    flex: 1,
+  },
+  lettersContent: {
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+  },
+  lettersGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  letterCard: {
+    alignItems: "center",
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 8,
+    minWidth: 84,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  letterIconBox: {
+    alignItems: "center",
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 64,
+    justifyContent: "center",
+    width: 64,
+  },
+  letterLabel: {
+    fontSize: 13,
+    textAlign: "center",
+  },
 });
 
 export default function PracticeScreen() {
-  return <DrawingPracticeCanvas />;
+  const colorScheme = useColorScheme() ?? "light";
+  const isDark = colorScheme === "dark";
+  const letterMap = lettersJson as LetterPathMap;
+  const lessonCatalog = lessonsData as LessonCatalog;
+
+  const letters = useMemo(() => {
+    const seen = new Set<string>();
+
+    return lessonCatalog.lessons
+      .flatMap((lesson) => lesson.letters)
+      .map((letter) => {
+        const key = (letter.code ?? letter.transliteration ?? "")
+          .trim()
+          .toLowerCase();
+        return {
+          key,
+          char: letter.char,
+          bundle: letterMap[key],
+        };
+      })
+      .filter(
+        (entry) =>
+          !!entry.key &&
+          !!entry.bundle &&
+          !seen.has(entry.key) &&
+          (seen.add(entry.key), true),
+      );
+  }, [lessonCatalog, letterMap]);
+
+  return (
+    <ThemedView style={styles.lettersContainer}>
+      <ScrollView contentContainerStyle={styles.lettersContent}>
+        <ThemedText type="title">Letters</ThemedText>
+        <View style={styles.lettersGrid}>
+          {letters.map(({ key, char, bundle }) => (
+            <ThemedView
+              key={key}
+              style={[
+                styles.letterCard,
+                {
+                  borderColor: Colors[colorScheme].icon,
+                  backgroundColor: isDark ? "#1f2327" : "#f8fafc",
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.letterIconBox,
+                  {
+                    borderColor: Colors[colorScheme].tint,
+                    backgroundColor: isDark ? "#151718" : "#ffffff",
+                  },
+                ]}
+              >
+                <Svg
+                  width={48}
+                  height={48}
+                  viewBox={`0 0 ${bundle.width} ${bundle.height}`}
+                >
+                  {bundle.paths.map((d, index) => (
+                    <SvgPath
+                      key={`${key}-${index}`}
+                      d={d}
+                      stroke={Colors[colorScheme].text}
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      fill="none"
+                    />
+                  ))}
+                </Svg>
+              </View>
+              <ThemedText style={styles.letterLabel}>{char}</ThemedText>
+            </ThemedView>
+          ))}
+        </View>
+      </ScrollView>
+    </ThemedView>
+  );
 }

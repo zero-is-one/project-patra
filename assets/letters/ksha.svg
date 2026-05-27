@@ -9,7 +9,7 @@
    id="svg1"
    xml:space="preserve"
    inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
-   sodipodi:docname="ma.svg"
+   sodipodi:docname="ksha.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
    inkscape:pagecheckerboard="0"
    inkscape:deskcolor="#d1d1d1"
    inkscape:document-units="mm"
-   inkscape:zoom="9.2120695"
-   inkscape:cx="45.212425"
-   inkscape:cy="119.84278"
+   inkscape:zoom="1.6284792"
+   inkscape:cx="-75.223558"
+   inkscape:cy="52.195938"
    inkscape:window-width="3840"
    inkscape:window-height="2068"
    inkscape:window-x="-12"
@@ -68,13 +68,12 @@
        
        <path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="m 17.85228,13.302799 c -0.445985,5.925885 1.898595,16.897674 -1.378626,18.08205 -3.277221,1.184376 -7.5338965,-1.590333 -5.453091,-5.079712 2.080806,-3.489379 20.757375,-1.23502 20.757375,-1.23502"
+   d="m 32.250821,20.146608 c -3.853173,1.395421 -8.385478,2.778528 -12.290242,0.686105 -2.077912,-1.113478 -3.895051,-3.195309 -3.347139,-5.737639 0.59193,-2.746574 4.294365,-3.314238 5.769646,-1.009772 1.482114,2.315138 -0.0857,4.993899 -1.68266,6.728701 -1.649709,1.792105 -4.031484,2.850874 -5.014227,5.256462 -1.026251,2.512088 -0.645198,5.950725 2.107763,7.132122 2.402117,1.030837 5.750738,1.328408 7.676081,-0.73431 1.702066,-1.82351 -1.364132,-3.782054 -1.704175,-1.143435 -0.308325,2.3925 1.314097,5.093467 3.529523,6.287574"
    id="path1"
-   sodipodi:nodetypes="czzc" /><path
+   sodipodi:nodetypes="cssssssssc" /><path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="m 32.225387,13.125669 0,23.293038"
-   id="path2"
-   sodipodi:nodetypes="cc" /><path
+   d="M 32.455157,12.723571 V 36.619756"
+   id="path2" /><path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="M 8.7025775,12.666128 H 39.089795"
+   d="m 25.332255,12.493799 h 12.0917"
    id="path3" /></svg>

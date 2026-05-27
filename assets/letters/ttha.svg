@@ -9,7 +9,7 @@
    id="svg1"
    xml:space="preserve"
    inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
-   sodipodi:docname="ma.svg"
+   sodipodi:docname="ttha.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
    inkscape:pagecheckerboard="0"
    inkscape:deskcolor="#d1d1d1"
    inkscape:document-units="mm"
-   inkscape:zoom="9.2120695"
-   inkscape:cx="45.212425"
-   inkscape:cy="119.84278"
+   inkscape:zoom="6.5139168"
+   inkscape:cx="48.127726"
+   inkscape:cy="109.30444"
    inkscape:window-width="3840"
    inkscape:window-height="2068"
    inkscape:window-x="-12"
@@ -68,13 +68,12 @@
        
        <path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="m 17.85228,13.302799 c -0.445985,5.925885 1.898595,16.897674 -1.378626,18.08205 -3.277221,1.184376 -7.5338965,-1.590333 -5.453091,-5.079712 2.080806,-3.489379 20.757375,-1.23502 20.757375,-1.23502"
-   id="path1"
-   sodipodi:nodetypes="czzc" /><path
+   d="m 25.791798,12.809735 v 7.381394"
+   id="path1" /><path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="m 32.225387,13.125669 0,23.293038"
+   d="m 25.734355,20.277293 c -5.210645,-1.068079 -11.063707,3.552783 -10.486075,8.992182 0.435725,4.103096 4.525969,6.866923 8.462528,7.056266 3.538056,0.170176 7.565101,-1.172266 9.390879,-4.36554 1.760689,-3.079434 0.08142,-6.955062 -2.466515,-9.07017 -1.319092,-1.095011 -2.827203,-1.958368 -4.441243,-2.526562"
    id="path2"
-   sodipodi:nodetypes="cc" /><path
+   sodipodi:nodetypes="cssssc" /><path
    style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   d="M 8.7025775,12.666128 H 39.089795"
+   d="M 12.206586,12.608685 H 37.423955"
    id="path3" /></svg>
